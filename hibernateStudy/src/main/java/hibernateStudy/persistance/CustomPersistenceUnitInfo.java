@@ -78,6 +78,7 @@ public class CustomPersistenceUnitInfo implements PersistenceUnitInfo{
 		List<String> list = new LinkedList<>();
 		list.add("hibernateStudy.entity.TestEr");
 		list.add("hibernateStudy.entity.Product");
+		list.add("hibernateStudy.entity.Student");
 		return list;
 	}
 

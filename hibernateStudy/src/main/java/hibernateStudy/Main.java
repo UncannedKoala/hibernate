@@ -5,7 +5,8 @@ import java.util.Map;
 
 import org.hibernate.jpa.HibernatePersistenceProvider;
 
-import hibernateStudy.entity.Product;
+import hibernateStudy.entity.Student;
+import hibernateStudy.entity.keys.StudentKey;
 import hibernateStudy.persistance.CustomPersistenceUnitInfo;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -35,8 +36,12 @@ public class Main {
 //			System.out.println("persisted >> "+city);
 			
 
-			Product product1 = new Product("code", 15, "Green");
-			em.persist(product1);
+//			Product product1 = new Product("code", 15, "Green");
+//			em.persist(product1);
+			
+			StudentKey key = new StudentKey(152, "third");
+			Student student1 = new Student(key , "James Potter");
+			em.persist(student1);
 			
 			em.getTransaction().commit();
 			
