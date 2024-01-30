@@ -77,6 +77,7 @@ public class CustomPersistenceUnitInfo implements PersistenceUnitInfo{
 	public List<String> getManagedClassNames() {
 		List<String> list = new LinkedList<>();
 		list.add("hibernateStudy.entity.TestEr");
+		list.add("hibernateStudy.entity.Product");
 		return list;
 	}
 
