@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.hibernate.jpa.HibernatePersistenceProvider;
 
-import hibernateStudy.entity.TestEr;
+import hibernateStudy.entity.Product;
 import hibernateStudy.persistance.CustomPersistenceUnitInfo;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -27,12 +27,18 @@ public class Main {
 			em = emf.createEntityManager();
 			em.getTransaction().begin();
 			
-			TestEr city = new TestEr("TEMP", "tMp", "TEMP district", 21);
-			System.out.println("before persist()>> "+city);
-			em.persist(city);
-			System.out.println("after persist()>> "+city);
+//			TestEr city = new TestEr("TEMP", "tMp", "TEMP district", 21);
+//			System.out.println("before persist()>> "+city);
+//			em.persist(city);
+//			System.out.println("after persist()>> "+city);
+//			em.getTransaction().commit();
+//			System.out.println("persisted >> "+city);
+			
+
+			Product product1 = new Product("code", 15, "Green");
+			em.persist(product1);
+			
 			em.getTransaction().commit();
-			System.out.println("persisted >> "+city);
 			
 		}catch(Exception ex) {
 			ex.printStackTrace();
