@@ -2,7 +2,7 @@ package hibernateStudy.entity;
 
 import java.util.Objects;
 
-import hibernateStudy.entity.keys.ProductKey;
+import hibernateStudy.entity.keys.ProductID;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
@@ -12,7 +12,7 @@ import jakarta.persistence.IdClass;
  * Object illustrating approach1 to have COMPOUND/COMPLEX primary key
  */
 @Entity
-@IdClass(value = ProductKey.class)
+@IdClass(value = ProductID.class)
 public class Product {
 	
 	@Id

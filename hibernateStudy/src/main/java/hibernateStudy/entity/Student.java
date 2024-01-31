@@ -2,7 +2,7 @@ package hibernateStudy.entity;
 
 import java.util.Objects;
 
-import hibernateStudy.entity.keys.StudentKey;
+import hibernateStudy.entity.keys.StudentID;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 
@@ -10,15 +10,15 @@ import jakarta.persistence.Entity;
 public class Student {
 	
 	@EmbeddedId
-	private StudentKey id;
+	private StudentID id;
 	
 	private String name;
 
-	public StudentKey getId() {
+	public StudentID getId() {
 		return id;
 	}
 
-	public void setId(StudentKey id) {
+	public void setId(StudentID id) {
 		this.id = id;
 	}
 
@@ -35,7 +35,7 @@ public class Student {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Student(StudentKey id, String name) {
+	public Student(StudentID id, String name) {
 		super();
 		this.id = id;
 		this.name = name;
