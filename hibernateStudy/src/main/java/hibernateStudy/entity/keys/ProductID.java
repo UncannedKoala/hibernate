@@ -34,7 +34,7 @@ public class ProductID extends CustomizedObjectID {
 
 	@Override
 	public String toString() {
-		return "ProductKey [code=" + code + ", number=" + number + "]";
+		return "ProductID [code=" + code + ", number=" + number + "]";
 	}
 
 	public ProductID() {

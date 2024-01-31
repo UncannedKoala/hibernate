@@ -11,4 +11,6 @@ public abstract class CustomizedObjectID implements Serializable {
 	public abstract int hashCode();
 
 	public abstract boolean equals(Object obj) ;
+	
+	public abstract String toString();
 }

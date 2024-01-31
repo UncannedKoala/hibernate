@@ -42,6 +42,12 @@ public class StudentID extends CustomizedObjectID {
 		return Objects.hash(className, rollNumber);
 	}
 
+
+	@Override
+	public String toString() {
+		return "StudentID [rollNumber=" + rollNumber + ", className=" + className + "]";
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
