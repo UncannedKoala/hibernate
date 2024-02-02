@@ -5,10 +5,8 @@ import java.util.Map;
 
 import org.hibernate.jpa.HibernatePersistenceProvider;
 
-import hibernateStudy.entity.Product;
-import hibernateStudy.entity.Student;
-import hibernateStudy.entity.keys.ProductID;
-import hibernateStudy.entity.keys.StudentID;
+import hibernateStudy.entity.Passport;
+import hibernateStudy.entity.Person;
 import hibernateStudy.persistance.CustomPersistenceUnitInfo;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -30,40 +28,15 @@ public class Main {
 			em = emf.createEntityManager();
 			em.getTransaction().begin();
 			
-			/*
-			 * TestEr city = new TestEr("TEMP", "tMp", "TEMP district", 21);
-			 * System.out.println("before persist()>> "+city); em.persist(city);
-			 * System.out.println("after persist()>> "+city); em.getTransaction().commit();
-			 * System.out.println("persisted >> "+city);
-			 */
-			
-
-			
-//			  COMPLEX ID GENERATION APPROACHES AND SINCE THE IDS ARE PART OF ENTITY THEY LIVE ON THE SAME TABLE
-			 
-			/*
-			 * COMPLEX ID approach 1 using @Id (in the entity class on id instance
-			 * variables) and @IdClass(value = ProductID.class) on the entity class
-			 */
-			Product product1 = new Product("code", 15, "Green");
-			em.persist(product1);
-			
-			/* The following line will not work as the passed 'id' type does not match the <ProductID>
-			 * System.out.println(em.find(Product.class, 15)); */
-			System.out.println(em.find(Product.class, new ProductID("code", 15)));
+			Person person = new Person("person name", new Passport("ASfa46AsDa5"));
+			em.persist(person);
 
 			/*
-			 * COMPLEX ID approach 1 using @EmbeddedId (in the entity class on <StudentID>
-			 * variable) and @Embeddable (on the StudentID class)
+			 * To avoid SQL Injection attacks, avoid the use of direct concatenation of the
+			 * values to the SQL queries and avoid Statement(use PreparedStatement instead).
 			 */
-			StudentID key = new StudentID(152, "third");
-			Student student1 = new Student(key , "James Potter");
-			em.persist(student1);
-			
-			/* The following line will not work because 'id' passed is not of type <StudentID>
-			 * System.out.println(em.find(Student.class, 152)); */
-			System.out.println(em.find(Student.class, new StudentID(152, "third")));
-			
+			Person queryResult = em.createQuery("SELECT p FROM Person p WHERE p.passport.passportNumber = :number", Person.class).setParameter("number", "ASfa46AsDa5").getSingleResult();
+			System.out.println(queryResult);
 			
 			em.getTransaction().commit();
 			

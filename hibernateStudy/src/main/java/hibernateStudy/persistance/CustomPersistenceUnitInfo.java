@@ -15,10 +15,10 @@ import jakarta.persistence.spi.ClassTransformer;
 import jakarta.persistence.spi.PersistenceUnitInfo;
 import jakarta.persistence.spi.PersistenceUnitTransactionType;
 
-public class CustomPersistenceUnitInfo implements PersistenceUnitInfo{
+public class CustomPersistenceUnitInfo implements PersistenceUnitInfo {
 
 	private final String puName;
-	
+
 	public CustomPersistenceUnitInfo(String puName) {
 		this.puName = puName;
 	}
@@ -41,91 +41,78 @@ public class CustomPersistenceUnitInfo implements PersistenceUnitInfo{
 	@Override
 	public DataSource getJtaDataSource() {
 		HikariDataSource dataSource = new HikariDataSource();
-		
+
 		dataSource.setJdbcUrl("jdbc:mysql://localhost/world");
 		dataSource.setUsername("root");
 		dataSource.setPassword("r00t_passw0rd");
-		
+
 		return dataSource;
 	}
 
 	@Override
+	public List<String> getManagedClassNames() {
+		List<String> managedClasses = new LinkedList<>();
+		managedClasses.add("hibernateStudy.entity.Person");
+		managedClasses.add("hibernateStudy.entity.Passport");
+		return managedClasses;
+	}
+
+	@Override
 	public DataSource getNonJtaDataSource() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<String> getMappingFileNames() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<URL> getJarFileUrls() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public URL getPersistenceUnitRootUrl() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<String> getManagedClassNames() {
-		List<String> list = new LinkedList<>();
-		list.add("hibernateStudy.entity.TestEr");
-		list.add("hibernateStudy.entity.Product");
-		list.add("hibernateStudy.entity.Student");
-		return list;
-	}
-
-	@Override
 	public boolean excludeUnlistedClasses() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public SharedCacheMode getSharedCacheMode() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ValidationMode getValidationMode() {	
-		// TODO Auto-generated method stub
+	public ValidationMode getValidationMode() {
 		return null;
 	}
 
 	@Override
 	public Properties getProperties() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String getPersistenceXMLSchemaVersion() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public ClassLoader getClassLoader() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void addTransformer(ClassTransformer transformer) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public ClassLoader getNewTempClassLoader() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
