@@ -51,9 +51,10 @@ public class CustomPersistenceUnitInfo implements PersistenceUnitInfo {
 
 	@Override
 	public List<String> getManagedClassNames() {
+//		hibernateStudy.entity.
 		List<String> managedClasses = new LinkedList<>();
-		managedClasses.add("hibernateStudy.entity.Person");
-		managedClasses.add("hibernateStudy.entity.Passport");
+		managedClasses.add("hibernateStudy.entity.Post");
+		managedClasses.add("hibernateStudy.entity.Comment");
 		return managedClasses;
 	}
 
