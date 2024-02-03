@@ -159,6 +159,14 @@ i.e. @OneToOne(optional = false)
 
 * In '1:n' (uni-directional or bi-directional) relationship, the foreign key column is created on the table representing the 'n' side of the relation because the '1' side of the relationship can not hold multiple values for a single <Entity>.
 
+* In '1:n' (bi-directional) relationship, a terniary table is created by default to map the ids of the both the <Entites>, this happens because hibernate is unable to conclude where to create the FK relation. To prevent the creation of this needless ternary table, use 'mappedBy' property of @OneToMany on the '1' side of the relation and put value as name of the attribute(instance variable) on the other side.
+
+* In '1:1' and '1:n' for both uni-directional and bi-directional relationship we do not need the third table as it is redundant.
+
+* In '1:n' bi-directional relationship always use the 'mappedBy' property of @OneToMany on the '1' side <Entity> of the relation.
+
+* Collections references are LAZY by default(and it should remain).
+
 * Here's how to prevent SQL injection attacks in Java:
 
 1. Use Prepared Statements:
@@ -201,5 +209,7 @@ Remember:
 Be cautious with dynamic SQL features like EXECUTE IMMEDIATE or sp_executesql.
 Apply input validation and parameterization consistently to all user-supplied data.
 Stay informed about SQL injection techniques and best practices.
+
+* NOTE :: IMPORTANT :: for all bi-directional relationships in java we must overide the toString() properly else we will get StackoverflowError as both the classes will keep calling other class's toString().
 
 * Never give power of DDLs to hibernate, always dependencies such as flyway, Liquibase.
