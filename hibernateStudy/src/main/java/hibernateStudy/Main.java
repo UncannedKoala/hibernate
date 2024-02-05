@@ -2,11 +2,12 @@ package hibernateStudy;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.hibernate.jpa.HibernatePersistenceProvider;
 
-import hibernateStudy.entity.Comment;
-import hibernateStudy.entity.Post;
+import hibernateStudy.entity.Group;
+import hibernateStudy.entity.User;
 import hibernateStudy.persistance.CustomPersistenceUnitInfo;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -28,20 +29,19 @@ public class Main {
 			em = emf.createEntityManager();
 			em.getTransaction().begin();
 			
-			Post post1 = new Post("Post title1","post1 content");			
-			Post post2 = new Post("Post title2","post2 content");
+			User usr1 = new User("Ron");
+			User usr2 = new User("Fred");
+			User usr3 = new User("Percy");
+			User usr4 = new User("Goyl");
+			User usr5 = new User("Neviel");
+			User usr6 = new User("Anjlena");
+			User usr7 = new User("Luna");
 			
-			new Comment(post1, "POST1 :: nice post");
-			new Comment(post1, "POST1 :: wooho, looking clean");
-			new Comment(post2, "POST2 :: Damn, you look handsome");
-			new Comment(post2, "POST2 :: oi, you look like a parrot mate");
-			new Comment(post2, "POST2 :: why the pig face??");
+			Group group1 = new Group("Gryphindor", Set.of(usr1, usr2, usr3, usr4));
+			Group group2 = new Group("Slytherin", Set.of(usr5, usr6, usr7));
 			
-			em.persist(post1);
-			em.persist(post2);
-			
-			System.out.println(em.find(Post.class, 1));
-			System.out.println(em.find(Post.class, 2).getComments().get(0).completeToString());
+			em.persist(group1);
+			em.persist(group2);
 			
 			em.getTransaction().commit();
 			
