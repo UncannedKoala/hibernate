@@ -12,4 +12,6 @@ import lombok.NoArgsConstructor;
 public class ElectronicDevice extends Product{
 	
 	private int voltage;
+	
+	private String brand;
 }

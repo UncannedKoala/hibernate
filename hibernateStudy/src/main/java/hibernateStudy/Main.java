@@ -29,13 +29,13 @@ public class Main {
 			em = emf.createEntityManager();
 			em.getTransaction().begin();
 			
-			Book a = new Book("author A");
-			Book b = new Book("author B");
-			Product c = new Book("author C");
-			Product e = new ElectronicDevice(17);
-			ElectronicDevice f = new ElectronicDevice(18);
-			ElectronicDevice g = new ElectronicDevice(19);
-			ElectronicDevice h = new ElectronicDevice(20);
+			Book a = new Book("Author A", "Title A");
+			Book b = new Book("Author B", "Title B");
+			Product c = new Book("Author C", "Title C");
+			Product e = new ElectronicDevice(17, "Havells");
+			ElectronicDevice f = new ElectronicDevice(18, "HP");
+			ElectronicDevice g = new ElectronicDevice(19, "Wipro");
+			ElectronicDevice h = new ElectronicDevice(20, "Dell");
 			
 			em.persist(a);
 			em.persist(b);

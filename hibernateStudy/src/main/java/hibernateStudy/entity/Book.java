@@ -12,4 +12,7 @@ import lombok.NoArgsConstructor;
 public class Book extends Product{
 
 	private String author;
+	
+	private String title;	
+	
 }

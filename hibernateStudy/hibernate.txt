@@ -173,6 +173,10 @@ i.e. @OneToOne(optional = false)
 - InheritanceType.SINGLE_TALBE also enforces that all columns be marked nullable(except corner cases).
 - we are not required to bother about 'DTYPE' column while fetching, updating or deleting.
 
+* @Inheritance(strategy = InheritanceType.JOINED) A strategy in which fields that are specific to a subclass are mapped to a separate table than the fields that are common to the parent class, and a join is performed to instantiate the subclass.
+- Each <Entity> will have the its own table with column for its own attributes(but not for the inherited attributes). The inherited attributes reside in parent <Entity> table and child <Entity> table has foreign  key reference to the parent <Entity> table 'id' column.
+- If root-class 'id' is inherited by the sub classes then each sub-class tables will have the 'id' column, and that 'id' column-value will match the 'id' column-value in the root-class table.
+- Also, each sub-class table 'id' column will have a FK constrain to root-class 'id' column,
 
 * Here's how to prevent SQL injection attacks in Java:
 
