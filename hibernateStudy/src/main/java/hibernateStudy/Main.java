@@ -2,12 +2,12 @@ package hibernateStudy;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import org.hibernate.jpa.HibernatePersistenceProvider;
 
-import hibernateStudy.entity.Group;
-import hibernateStudy.entity.User;
+import hibernateStudy.entity.Book;
+import hibernateStudy.entity.ElectronicDevice;
+import hibernateStudy.entity.Product;
 import hibernateStudy.persistance.CustomPersistenceUnitInfo;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -29,19 +29,29 @@ public class Main {
 			em = emf.createEntityManager();
 			em.getTransaction().begin();
 			
-			User usr1 = new User("Ron");
-			User usr2 = new User("Fred");
-			User usr3 = new User("Percy");
-			User usr4 = new User("Goyl");
-			User usr5 = new User("Neviel");
-			User usr6 = new User("Anjlena");
-			User usr7 = new User("Luna");
+			Book a = new Book("author A");
+			Book b = new Book("author B");
+			Product c = new Book("author C");
+			Product e = new ElectronicDevice(17);
+			ElectronicDevice f = new ElectronicDevice(18);
+			ElectronicDevice g = new ElectronicDevice(19);
+			ElectronicDevice h = new ElectronicDevice(20);
 			
-			Group group1 = new Group("Gryphindor", Set.of(usr1, usr2, usr3, usr4));
-			Group group2 = new Group("Slytherin", Set.of(usr5, usr6, usr7));
+			em.persist(a);
+			em.persist(b);
+			em.persist(c);
+
+			em.persist(e);
+			em.persist(f);
+			em.persist(g);
+			em.persist(h);
 			
-			em.persist(group1);
-			em.persist(group2);
+			/*
+			 * we can straight away use the class type, and not required to say what 'DTYPE'
+			 * value we need, this is because the 'DTYPE' is something ORM uses not us 
+			 */
+			System.out.println(em.find(Book.class, 3));
+			em.createQuery("SELECT p FROM Product p", Product.class).getResultList().forEach(res -> System.out.println(res));
 			
 			em.getTransaction().commit();
 			
