@@ -50,8 +50,10 @@ public class Main {
 			 * we can straight away use the class type, and not required to say what 'DTYPE'
 			 * value we need, this is because the 'DTYPE' is something ORM uses not us 
 			 */
-			System.out.println(em.find(Book.class, 3));
 			em.createQuery("SELECT p FROM Product p", Product.class).getResultList().forEach(res -> System.out.println(res));
+
+			/* even the below query uses the UNION */
+			System.out.println(em.find(Product.class, 3));
 			
 			em.getTransaction().commit();
 			
