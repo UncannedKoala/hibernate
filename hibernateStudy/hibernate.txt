@@ -1,6 +1,6 @@
-* When using the Hibernate Entity manager approach, you can either use the xml(persistance.xml file) to configure the hibernate in your maven application, or use the PersistanceUnitInfo interface(CustomPersistanceUnitInfo.java implements PersistanceUnitInfo).
+* When using the Hibernate Entity manager approach, you can either use the xml (persistance.xml file) to configure the hibernate in your maven application, or use the PersistanceUnitInfo interface (CustomPersistanceUnitInfo.java implements PersistanceUnitInfo).
 
-* @Entity can be used on anything(Concrete class or an abstract Class) that we would use as a reference to a <Entity>. 
+* @Entity can be used on anything (Concrete class or an abstract Class) that we would use as a reference to a <Entity>. 
 i.e. we have <Product> abstract class, <Book> extends Product and <ElectronicDevice> extends Product. Now, we can mark the <Product> abstract class as @Entity and it will allow us the write polymorphic queries refering to the root/parent class.
 
 *PERSISTANCE.XML route
@@ -10,8 +10,8 @@ i.e. we have <Product> abstract class, <Book> extends Product and <ElectronicDev
 4). ->	em.getTransaction().begin();	...........	em.getTransaction().commit();	em.close();	<-
 
 **PERSISTANCE_UNIT_INFO route
-1). create a class for custome persistance unit info	...	public class CustomPersistenceUnitInfo implements PersistenceUnitInfo
-2). override the methods and provide the values getPersistanceUnitName(), getPersistenceProviderClassName(), getTransactionType(), getJtaDataSource(), getManagedClassNames(), 
+1). create a class for custom persistence unit info	...	public class CustomPersistenceUnitInfo implements PersistenceUnitInfo
+2). override the methods and provide the values getPersistenceUnitName(), getPersistenceProviderClassName(), getTransactionType(), getJtaDataSource(), getManagedClassNames(), 
 3). ->
     @Override
     public DataSource getJtaDataSource() {
@@ -44,18 +44,18 @@ i.e. we have <Product> abstract class, <Book> extends Product and <ElectronicDev
 	em.merge();		-> Merges an entity from outside the context to the context.
 	em.refresh();		-> Mirror the context from the database(overrides the context entity with DB entity)
 	em.detach();		-> Taking the entity out of the context
-	em.getReference();	-> Using decorator pattherm, returns a shell(Empty object) of the required type, but the select query is not executed unles the object reference is used. 
-				Refer to it as a lazily fetched initiallized object.
-	em.flush();		-> Mirror the context entites to the DB NOW!!!, do not wait for the commit().
+	em.getReference();	-> Using decorator pattern, returns a shell(Empty object) of the required type, but the select query is not executed unless the object reference is used. 
+				Refer to it as a lazily fetched initialized object.
+	em.flush();		-> Mirror the context entities to the DB NOW!!!, do not wait for the commit().
 
 	em.createQuery("hql query", ResultClass.class);
 	i.e. em.createQuery("SELECT p FROM Person p WHERE p.passport.passportNumber = :number", Person.class).setParameter("number", "ASfa46AsDa5").getSingleResult();
 
-* UUID are good for indexing when the database has a type for UUIDs, But has bad performace when used as String. Consider the data is sent to frontend and the security is poorly implemented, user might try playing with pathVariable/queryParam value and access data he is not supposed to access. But the UUID not easy to anticipate and do not follow a pattern.
+* UUID are good for indexing when the database has a type for UUIDs, but has bad performance when used as String. Consider the data is sent to frontend and the security is poorly implemented, user might try playing with pathVariable/queryParam value and access data he is not supposed to access. But the UUID not easy to anticipate and do not follow a pattern.
 
 * We can have 2 ids, 1 UUID to communicate with the frontend(external id) and another to use in app(internal id)
 
-* we can have a 'SIMPLE primary key' or the 'COMPOSED primary key'.
+* We can have a 'SIMPLE primary key' or the 'COMPOSED primary key'.
 
 * For hbm2ddl.auto property the list of possible options is:
 validate: validate that the schema matches, make no changes to the schema of the database, you probably want this for production.
@@ -67,7 +67,7 @@ create-drop: create the schema as in create above, but also drop the schema at t
 
 * Hibernate's proprietary API refers to the traditional way of configuring and using Hibernate, which involves using the hibernate.cfg.xml configuration file. This approach is more flexible and allows for more fine-grained control over the Hibernate settings. However, it requires more manual configuration and can be more error-prone.
 
-* Hibernate EntityManager is a more streamlined approach introduced with the Java Persistence API (JPA), which is a standard API for managing persistence in Java applications. In this approach, the configuration is done using the persistence.xml file, which is located in the META-INF folder of the application. This approach is more straightforward and easier to set up, as it provides a more minimalist configuration file that can be easily generated by tools like the Hibernate Tools Maven Plugin.
+* Hibernate EntityManager is a more streamlined approach introduced with the Java Persistence API (JPA), which is a standard API for managing persistence in Java applications. In this approach, the configuration is done using the persistence.xml file, which is in the META-INF folder of the application. This approach is more straightforward and easier to set up, as it provides a more minimalist configuration file that can be easily generated by tools like the Hibernate Tools Maven Plugin.
 
 * Hibernate's proprietary API:
 1). Create a hibernate.cfg.xml file in the root directory of your project.
@@ -75,7 +75,7 @@ create-drop: create the schema as in create above, but also drop the schema at t
 3). Use the Hibernate API to create a SessionFactory instance, which will be used to create Session objects for interacting with the database.
 4). Use the Session objects to perform CRUD (Create, Read, Update, Delete) operations on the database.
 
-*Hibernate EntityManager:
+* Hibernate EntityManager:
 1). Create a persistence.xml file in the META-INF folder of your project.
 2). Configure the Hibernate settings in the persistence.xml file, such as the database connection, dialect, and other properties.
 3). Use the Hibernate EntityManager API to create an EntityManagerFactory instance, which will be used to create EntityManager objects for interacting with the database.
@@ -85,7 +85,7 @@ create-drop: create the schema as in create above, but also drop the schema at t
 
 * Hibernate 6 is included in Spring Boot framework version 3. To migrate to Hibernate 6, you'll need to move to Java 17, the minimum version supported by Spring Boot 3. 
 
-* COMPLEX/ COUMOUND ID =  custom id is a id composed of multiple column values instead of just 1, can set up by following 2 methods:
+* COMPLEX/ COUMOUND ID = custom id is a id composed of multiple column values instead of just 1, can set up by following 2 methods:
 NOTE :: In both the approaches we need to implement the <Serializable> interface
 1). On <Entity> class, we have an instance variable of the <ComplexId> class in the <Entity> class and mark the instance variable with @EmbeddedId, use @Embeddable on the <ComplexId> class.
 ->
@@ -125,11 +125,11 @@ public class CompoundKey implements Serializable {
 }
 <-
 
-* column name of the primary key is "table_id" by default.
+* Column name of the primary key is "table_id" by default.
 
 * Each instance variable is defined as a column in the table.
 
-* In <Entity> has-A <Entity> we can not use the @Column on that variable, instead use the @JoinColumn.
+* In <Entity> has-A <Entity> we cannot use the @Column on that variable, instead use the @JoinColumn.
 
 * @JoinColumn is used on the <Entity> typed reference variable in another <Entity> class which exhibits has-A relation, when you want to change the column name for the foreign key column.
 i.e. 	<Person> has-A <Passport> uni-directional relation, In the Person Class{... @OneToOne @JoinColumn(name = "foreignKey_to_passport") private Passport passport; ...}
@@ -138,7 +138,7 @@ i.e. 	<Person> has-A <Passport> uni-directional relation, In the Person Class{..
 i.e. 	<Person> has-A <Passport> bi-directional relation, if we want person table to contain the passport refrence and not create a third table, in Passport class 
 	{... @OneToOne(mapppedBy = "PassportRefVarInPerson")private Person person ...}
 
-* @OneToOne has 'cascade' property whcih can have jakarta.persistence.CascadeType.ALL,PERSIST,MERGE,REMOVE,REFRESH,DETACH
+* @OneToOne has 'cascade' property which can have jakarta.persistence.CascadeType.ALL,PERSIST,MERGE,REMOVE,REFRESH,DETACH
 i.e. 	@OneToOne(cascade = jakarta.persistence.CascadeType.PERSIST),
 	@OneToOne(cascade = {jakarta.persistence.CascadeType.PERSIST, jakarta.persistence.CascadeType.REMOVE, jakarta.persistence.CascadeType.MERGE, jakarta.persistence.CascadeType.REFRESH})
 
@@ -148,42 +148,44 @@ NOTE :: CascadeType.ALL should be avoided
 
 * CascadeType is an enum in both jakarta.persistence.CascadeType and org.hibernate.annotations.CascadeType packages.
 
-* 'fetch' of any SVT(simple value type) is always EAGER by default, but incase of CVTs(complex value types) it is lazily fetched which can be changed using fetch property of @OneToOne and @OneToMany or @ManyToMany
+* 'fetch' of any SVT (simple value type) is always EAGER by default, but in case of CVTs (complex value types) it is lazily fetched which can be changed using fetch property of @OneToOne and @OneToMany or @ManyToMany
 i.e. @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY)
 
 * 'optional' is a property in @OneToOne only and not it either of @OneToMany, @ManyToMany. this tells if the value can be null or not. meaning that if the owner entity is allowed to have null as owned entity value. Its value is true by default
 i.e. @OneToOne(optional = false)
 
-* The 1:1 relationship, @OneToOne annotation(both uni-directionnal and bi-directional) does not create a third table but only creates a column in the owner <Entity> table.
+* The 1:1 relationship, @OneToOne annotation (both uni-directionnal and bi-directional) does not create a third table but only creates a column in the owner <Entity> table.
 
-* The 1:n bi-directional relationship, we have to go for @OneToMany or @ManyToOne on either <Entity>. We use the @OneToMany in the <Entity> that has the relation to multiple <Entites>, and then we have @ManyToOne in the <Entity> that has relation only to one <Entity>.
+* The ‘1:n’ bi-directional relationship, we have to go for @OneToMany or @ManyToOne on either <Entity>. We use the @OneToMany in the <Entity> that has the relation to multiple <Entites>, and then we have @ManyToOne in the <Entity> that has relation only to one <Entity>.
 
 * @OneToMany represents the '1' side of the '1:n' relationship, while @ManyToOne represents 'n' side of the '1:n' relation.
 
-* In '1:n' (uni-directional or bi-directional) relationship, the foreign key column is created on the table representing the 'n' side of the relation because the '1' side of the relationship can not hold multiple values for a single <Entity>.
+* In '1:n' (uni-directional or bi-directional) relationship, the foreign key column is created on the table representing the 'n' side of the relation because the '1' side of the relationship cannot hold multiple values for a single <Entity>.
 
-* In '1:n' (bi-directional) relationship, a terniary table is created by default to map the ids of the both the <Entites>, this happens because hibernate is unable to conclude where to create the FK relation. To prevent the creation of this needless ternary table, use 'mappedBy' property of @OneToMany on the '1' side of the relation and put value as name of the attribute(instance variable) on the other side.
+* In '1:n' (bi-directional) relationship, a ternary table is created by default to map the ids of the both the <Entites>, this happens because hibernate is unable to conclude where to create the FK relation. To prevent the creation of this needless ternary table, use 'mappedBy' property of @OneToMany on the '1' side of the relation and put value as name of the attribute (instance variable) on the other side.
 
 * In '1:1' and '1:n' for both uni-directional and bi-directional relationship we do not need the third table as it is redundant.
 
 * In '1:n' bi-directional relationship always use the 'mappedBy' property of @OneToMany on the '1' side <Entity> of the relation.
 
-* Collections references are LAZY by default(and it should remain).
+* Collections references are LAZY by default (and it should remain).
 
 * In, inheritance for hibernate for parent 'id' to be inherited it must not be private, preferably marked 'protected' and not 'private'.
 
-* @Inheritance(strategy = InheritanceType.SINGLE_TABLE) creates a single table (named as the parent-most class in the hierarchy). The created table will contain collumns for all the attributes in the classe hierarchy and an extra 'DTYPE' column that contains the class name of the object type(not the reference due to the fact that reference is in application and has nothing to do with ORM).
-- InheritanceType.SINGLE_TABLE also enforces that all columns be marked nullable(except corner cases).
-- we are not required to bother about 'DTYPE' column while fetching, updating or deleting.
+* @Inheritance(strategy = InheritanceType.SINGLE_TABLE) creates a single table (named as the parent-most class in the hierarchy). The created table will contain columns for all the attributes in the class’s hierarchy and an extra 'DTYPE' column that contains the class name of the object type (not the reference since reference is in application and has nothing to do with ORM).
+- InheritanceType.SINGLE_TABLE also enforces that all columns be marked nullable (except corner cases).
+- we are not required to bother about 'DTYPE' column while fetching, updating, or deleting.
 
 * @Inheritance(strategy = InheritanceType.JOINED) A strategy in which fields that are specific to a subclass are mapped to a separate table than the fields that are common to the parent class, and a join is performed to instantiate the subclass.
-- Each <Entity> will have the its own table with column for its own attributes(but not for the inherited attributes). The inherited attributes reside in parent <Entity> table and child <Entity> table has foreign  key reference to the parent <Entity> table 'id' column.
+- Each <Entity> will have the its own table with column for its own attributes (but not for the inherited attributes). The inherited attributes reside in parent <Entity> table and child <Entity> table has foreign key reference to the parent <Entity> table 'id' column.
 - If root-class 'id' is inherited by the sub classes then each sub-class tables will have the 'id' column, and that 'id' column-value will match the 'id' column-value in the root-class table.
 - Also, each sub-class table 'id' column will have a FK constrain to root-class table's 'id' column.
 
-* Inheritance(strategy = InheritanceType.TABLE_PER_CLASS) creates one table for eatch <Entity> having all the attributes(it's own and the inherited once) related to that <Entity>.
+* Inheritance(strategy = InheritanceType.TABLE_PER_CLASS) creates one table for each <Entity> having all the attributes(its own and the inherited once) related to that <Entity>.
 - TABLE_PER_CLASS strategy does not retain any <Entity> to <Entity> relationship, this kills the inheritance.
 - NOTE :: MAIN REASON TO AVOID is the use of UNION when using polymorphic(parent class operations) operation, and UNION is not supported by JPQL.
+
+* JPQL is 'Java Persistence Query Language' is used to define searches against persistent entities independent of the mechanism used to store those entities. As such, JPQL is "portable", and not constrained to any data store. The Java Persistence query language is an extension of the Enterprise JavaBeans query language, EJB QL, adding operations such as bulk deletes and updates, join operations, aggregates, projections, and subqueries. Furthermore, JPQL queries can be declared statically in metadata, or can be dynamically built in code
 
 
 * Here's how to prevent SQL injection attacks in Java:
