@@ -1,5 +1,8 @@
 * When using the Hibernate Entity manager approach, you can either use the xml(persistance.xml file) to configure the hibernate in your maven application, or use the PersistanceUnitInfo interface(CustomPersistanceUnitInfo.java implements PersistanceUnitInfo).
 
+* @Entity can be used on anything(Concrete class or an abstract Class) that we would use as a reference to a <Entity>. 
+i.e. we have <Product> abstract class, <Book> extends Product and <ElectronicDevice> extends Product. Now, we can mark the <Product> abstract class as @Entity and it will allow us the write polymorphic queries refering to the root/parent class.
+
 *PERSISTANCE.XML route
 1).	Create a persistence.xml file in the META-INF folder of your project.
 2). 	EntityManagerFactory emf = new HibernatePersistenceProvider().createContainerEntityManagerFactory(new CustomPersistenceUnitInfo(), new HashMap<>());
@@ -166,6 +169,22 @@ i.e. @OneToOne(optional = false)
 * In '1:n' bi-directional relationship always use the 'mappedBy' property of @OneToMany on the '1' side <Entity> of the relation.
 
 * Collections references are LAZY by default(and it should remain).
+
+* In, inheritance for hibernate for parent 'id' to be inherited it must not be private, preferably marked 'protected' and not 'private'.
+
+* @Inheritance(strategy = InheritanceType.SINGLE_TABLE) creates a single table (named as the parent-most class in the hierarchy). The created table will contain collumns for all the attributes in the classe hierarchy and an extra 'DTYPE' column that contains the class name of the object type(not the reference due to the fact that reference is in application and has nothing to do with ORM).
+- InheritanceType.SINGLE_TABLE also enforces that all columns be marked nullable(except corner cases).
+- we are not required to bother about 'DTYPE' column while fetching, updating or deleting.
+
+* @Inheritance(strategy = InheritanceType.JOINED) A strategy in which fields that are specific to a subclass are mapped to a separate table than the fields that are common to the parent class, and a join is performed to instantiate the subclass.
+- Each <Entity> will have the its own table with column for its own attributes(but not for the inherited attributes). The inherited attributes reside in parent <Entity> table and child <Entity> table has foreign  key reference to the parent <Entity> table 'id' column.
+- If root-class 'id' is inherited by the sub classes then each sub-class tables will have the 'id' column, and that 'id' column-value will match the 'id' column-value in the root-class table.
+- Also, each sub-class table 'id' column will have a FK constrain to root-class table's 'id' column.
+
+* Inheritance(strategy = InheritanceType.TABLE_PER_CLASS) creates one table for eatch <Entity> having all the attributes(it's own and the inherited once) related to that <Entity>.
+- TABLE_PER_CLASS strategy does not retain any <Entity> to <Entity> relationship, this kills the inheritance.
+- NOTE :: MAIN REASON TO AVOID is the use of UNION when using polymorphic(parent class operations) operation, and UNION is not supported by JPQL.
+
 
 * Here's how to prevent SQL injection attacks in Java:
 
