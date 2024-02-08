@@ -2,13 +2,10 @@ package hibernateStudy;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import org.hibernate.jpa.HibernatePersistenceProvider;
 
-import hibernateStudy.entity.Product;
 import hibernateStudy.persistance.CustomPersistenceUnitInfo;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -35,7 +32,7 @@ public class Main {
 
 		Map<String, String> props = new HashMap<>();
 		props.put("hibernate.show_sql", "true");
-		props.put("hibernate.hbm2ddl.auto", "create"); // create, none, update
+		props.put("hibernate.hbm2ddl.auto", "none"); // create, none, update
 		props.put("hibernate.format_sql", "true");
 //		props.put("hibernate.use_sql_comments", "true");
 //		<property name="hibernate.show_sql" value="true"/>
@@ -48,27 +45,29 @@ public class Main {
 
 			em.getTransaction().begin();
 
-			List<Product> list = new LinkedList<>();
-			list.add(new Product("Ice cream", new BigDecimal("43.3421")));
-			list.add(new Product("Cake", new BigDecimal("33.5421")));
-			list.add(new Product("Brush", new BigDecimal("23.6421")));
-			list.add(new Product("Coke", new BigDecimal("13.7421")));
-
-			for (Product temp : list) {
-				em.persist(temp);
-			}
+			/*
+			 * List<Product> list = new LinkedList<>(); list.add(new Product("Ice cream",
+			 * new BigDecimal("43.3421"))); list.add(new Product("Cake", new
+			 * BigDecimal("33.5421"))); list.add(new Product("Brush", new
+			 * BigDecimal("23.6421"))); list.add(new Product("Coke", new
+			 * BigDecimal("13.7421")));
+			 * 
+			 * for (Product temp : list) { em.persist(temp); }
+			 */
 
 			String jpql = "";
-			jpql = "SELECT p FROM Product p";
-			jpql = "SELECT p FROM Product p WHERE p.price > 25"; // where clause remains same
-			jpql = "SELECT p FROM Product p WHERE p.name LIKE :pName and p.price >= :price";
+//			jpql = "SELECT p FROM Product p";
+//			jpql = "SELECT p FROM Product p WHERE p.price > 25"; // where clause remains same
+//			jpql = "SELECT AVG(p.price) FROM Product p";
+//			jpql = "SELECT SUM(p.price) FROM Product p";
+//			jpql = "SELECT COUNT(p) FROM Product p";
+//			jpql = "SELECT MIN(p.price) FROM Product p";
+			jpql = "SELECT MAX(p.price) FROM Product p";
 
-			TypedQuery<Product> q = em.createQuery(jpql, Product.class); //
-			q.setParameter("pName", "%C%"); // containing 'C' case-insensitive
-//			q.setParameter("pName", "C%"); // starting with 'C' case-insensitive
-			q.setParameter("price", 20);
-			q.getResultList().forEach(System.out::println);
-			
+
+			TypedQuery<BigDecimal> q = em.createQuery(jpql, BigDecimal.class); //
+			System.out.println(q.getSingleResult());
+
 			em.getTransaction().commit();
 
 		} catch (Exception ex) {
