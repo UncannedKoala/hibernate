@@ -202,6 +202,14 @@ i.e. "SELECT p FROM Product p WHERE p.name LIKE :pName and p.price >= :price"
 * When getting the "jakarta.persistence.TypedQuery.getResultStream()" function, think if the next java operation can be done in the query itself or not. 
 DO NOT GET THE DATA AND FILTER IT AFTERWARDS IN THE JAVA APPLICATION, IF POSSIBLE, FILTER IT USING THE QUERY ITSELF.
 
+* While Querying SINGLE COLUMN value using JPQL, and that has the value of class <Type> (i.e. String, BigDecimal, Double) then use the below:
+->	TypedQuery<Type> q = em.createQuery(jpql, <Type>.class);	<-
+But, when querying for multiple column values that cannot by typed to any class (i.e. String, BigDecimal, Double), then you must accept them as an Array of Objects as shown below:
+->	TypedQuery<Object[]> q = em.createQuery(jpql, Object[].class);	<-
+Where each Object[] will represent a single row of the result set containing multiple values as the elements of the array.
+
+* For aggregation when there is only one result like for COUNT, then we can use "jakarta.persistence.TypedQuery.getSingleResult()" function to get the result. BUT it throws Exception if no result is found or if multiple results are found instead of one.
+
 
 
 * Here's how to prevent SQL injection attacks in Java:

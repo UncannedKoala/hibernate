@@ -1,6 +1,5 @@
 package hibernateStudy;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,15 +57,22 @@ public class Main {
 			String jpql = "";
 //			jpql = "SELECT p FROM Product p";
 //			jpql = "SELECT p FROM Product p WHERE p.price > 25"; // where clause remains same
+			/* .getSingleResult() will throw Exception if the value is not found, or if multiple results are found */
 //			jpql = "SELECT AVG(p.price) FROM Product p";
 //			jpql = "SELECT SUM(p.price) FROM Product p";
 //			jpql = "SELECT COUNT(p) FROM Product p";
 //			jpql = "SELECT MIN(p.price) FROM Product p";
-			jpql = "SELECT MAX(p.price) FROM Product p";
-
-
-			TypedQuery<BigDecimal> q = em.createQuery(jpql, BigDecimal.class); //
-			System.out.println(q.getSingleResult());
+//			jpql = "SELECT MAX(p.price) FROM Product p";
+			/* the below query it is expected to return Strings */
+//			jpql = "SELECT p.name FROM Product p";
+			/*
+			 * but, in the query below the result can not be napped to any Type <class>,
+			 * thus we take it as Object[]
+			 */
+//			jpql = "SELECT p.name, p.price FROM Product p";
+			jpql = "SELECT p.name, AVG(p.price) FROM Product p GROUP BY p.name";
+			TypedQuery<Object[]> q = em.createQuery(jpql, Object[].class);
+			q.getResultStream().forEach(obj -> System.out.println(obj[0]+" "+obj[1]));
 
 			em.getTransaction().commit();
 
