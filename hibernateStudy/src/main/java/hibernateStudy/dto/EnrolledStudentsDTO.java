@@ -1,16 +1,15 @@
 package hibernateStudy.dto;
 
 import hibernateStudy.entity.Enrollment;
-import hibernateStudy.entity.Student;
 import lombok.ToString;
 
 @ToString
 public class EnrolledStudentsDTO {
-	public final Student student;
+	public final String studentName;
 	public final Enrollment enrollment;
 	
-	public EnrolledStudentsDTO(Student student, Enrollment enrollment) {
-		this.student = student;
+	public EnrolledStudentsDTO(String student, Enrollment enrollment) {
+		this.studentName = student;
 		this.enrollment = enrollment;
 	}
 }

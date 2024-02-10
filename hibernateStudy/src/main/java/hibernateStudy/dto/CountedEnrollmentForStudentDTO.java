@@ -1,16 +1,15 @@
 package hibernateStudy.dto;
 
-import hibernateStudy.entity.Student;
 import lombok.ToString;
 
 @ToString
 public class CountedEnrollmentForStudentDTO {
 	
-	public final Student student;
+	public final String studentName;
 	public final Long courseCount;
 	
-	public CountedEnrollmentForStudentDTO(Student student, Long count) {
-		this.student = student;
+	public CountedEnrollmentForStudentDTO(String student, Long count) {
+		this.studentName = student;
 		this.courseCount = count;
 	}
 

@@ -1,3 +1,6 @@
+* JDBC Template and Spring data JDBC and not JPA implementation. They are the low-level abstraction to use java.sql package. Since they are not ORM, we can not use JPQL with them.
+Altough we can use the Spring Data JPA to use JPQL as Spring Data Jpa is a JPA implementation and an ORM.
+
 * When using the Hibernate Entity manager approach, you can either use the xml (persistance.xml file) to configure the hibernate in your maven application, or use the PersistanceUnitInfo interface (CustomPersistanceUnitInfo.java implements PersistanceUnitInfo).
 
 * @Entity can be used on anything (Concrete class or an abstract Class) that we would use as a reference to a <Entity>. 
@@ -185,6 +188,8 @@ i.e. @OneToOne(optional = false)
 - TABLE_PER_CLASS strategy does not retain any <Entity> to <Entity> relationship, this kills the inheritance.
 - NOTE :: MAIN REASON TO AVOID is the use of UNION when using polymorphic(parent class operations) operation, and UNION is not supported by JPQL.
 
+* UNION is not supported by JPQL.
+
 * JPQL is 'Java Persistence Query Language' is used to define searches against persistent entities independent of the mechanism used to store those entities. As such, JPQL is "portable", and not constrained to any data store. The Java Persistence query language is an extension of the Enterprise JavaBeans query language, EJB QL, adding operations such as bulk deletes and updates, join operations, aggregates, projections, and subqueries. Furthermore, JPQL queries can be declared statically in metadata, or can be dynamically built in code
 
 * ->	TypedQuery<Class> q = em.createQuery("QUERY",Class.class);	<-
@@ -220,9 +225,16 @@ then "a, b, c" is the projection part, "where x=3" the selection part.
 * We can use DTO queries in the JPQL queries -->> "SELECT new hibernateStudy.dto.EnrolledStudentsDTO(s, e) FROM Student s, Enrollment e WHERE s.id = e.student.id"
 but not in native sql. This is because in JPQL we refer to the classes and the context, but in native sql we refer to the tables and the DB itself.
 
-* ALWAYS AVOIDING THE native QUERIES.
+* ALWAYS TRY AVOIDING THE native QUERIES when using JPA implementation.
 
 * Immutability is a best practice. Especially with DTOs because they represent data at a given state. You preferably want to make sure that when creating an instance of a DTO (and this way definition a data state) no one will change it (meaning no other object in the app) until it's used.
+
+* Named Queries are put on the <Entity> classes as shown below using jakarta.persistance.* package:
+->	@NamedQueries(@NamedQuery(name = "getAll", 		// name of the query should be UNIQUE on the application level
+	query = "SELECT s FROM Student s")) 			// can interact with multiple entities				<-
+and use jakarta.persistence.EntityManager.createNamedQuery(String queryName, Class<?> resultClass) method to query as shown below:
+->	TypedQuery<Student> q = em.createNamedQuery("getAllStudents", Student.class);
+	q.getResultStream().forEach(obj -> System.out.println(obj));								<-
 
 
 * Here's how to prevent SQL injection attacks in Java:

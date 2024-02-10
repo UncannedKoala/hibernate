@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.hibernate.jpa.HibernatePersistenceProvider;
 
-import hibernateStudy.dto.CountedEnrollmentForStudentDTO;
+import hibernateStudy.entity.Student;
 import hibernateStudy.persistance.CustomPersistenceUnitInfo;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -31,20 +31,19 @@ public class Main {
 				EntityManager em = emf.createEntityManager();) {
 
 			em.getTransaction().begin();
-//			String jpqlDTO = "SELECT new hibernateStudy.dto.EnrolledStudentsDTO(s, e) FROM Student s, Enrollment e WHERE s.id = e.student.id";
-//			TypedQuery<EnrolledStudentsDTO> q = em.createQuery(jpqlINNER, EnrolledStudentsDTO.class);
 
-			//inner query
-//			String jpqlINNER = "SELECT s FROM Student s WHERE (SELECT COUNT(e) FROM Enrollment e WHERE e.student.id = s.id) >= 2";		//selects all the student who have enrolled for more than 1 courses
-//			TypedQuery<Student> q = em.createQuery(jpqlINNER, Student.class);
-
-			//inner query in the projection
-//			String jpqlINNERprojection = "SELECT (SELECT COUNT(e) FROM Enrollment e WHERE e.student = s) FROM Student s";				//select number of enrollments for each student
-//			TypedQuery<Long> q = em.createQuery(jpqlINNERprojection, Long.class);
-
-			//inner query in the projection using DTO
-			String jpqlINNERprojection = "SELECT new CountedEnrollmentForStudentDTO(s, (SELECT COUNT(e) FROM Enrollment e WHERE e.student = s)) FROM Student s";				//select number of enrollments for each student
-			TypedQuery<CountedEnrollmentForStudentDTO> q = em.createQuery(jpqlINNERprojection, CountedEnrollmentForStudentDTO.class);
+			//group by using DTO
+//			String jpqlINNERprojection = "SELECT new CountedEnrollmentForStudentDTO(s.name, COUNT(s)) "
+//					+ "FROM Student s "
+//					+ "GROUP BY s.name "
+//					+ "HAVING s.name LIKE '%m%'"
+//					+ "ORDER BY s.name DESC"
+//					+ " LIMIT 2";				//select number of enrollments for each student
+//			TypedQuery<CountedEnrollmentForStudentDTO> q = em.createQuery(jpqlINNERprojection, CountedEnrollmentForStudentDTO.class);
+	
+			//named query
+			TypedQuery<Student> q = em.createNamedQuery("findStudentsByName", Student.class);
+			q.setParameter("name", "t");
 			q.getResultStream().forEach(obj -> System.out.println(obj));
 			em.getTransaction().commit();
 
