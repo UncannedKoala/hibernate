@@ -210,6 +210,19 @@ Where each Object[] will represent a single row of the result set containing mul
 
 * For aggregation when there is only one result like for COUNT, then we can use "jakarta.persistence.TypedQuery.getSingleResult()" function to get the result. BUT it throws Exception if no result is found or if multiple results are found instead of one.
 
+* There is a 'N+1' query problem, where 'N' queries are run along with the one you executed. It can be resolved altering the relation ship or using custom query.
+
+* PROJECTION means choosing which columns (or expressions) the query shall return.
+SELECTION means which rows are to be returned.
+if the query is	 --->	select a, b, c from foobar where x=3;
+then "a, b, c" is the projection part, "where x=3" the selection part.
+
+* We can use DTO queries in the JPQL queries -->> "SELECT new hibernateStudy.dto.EnrolledStudentsDTO(s, e) FROM Student s, Enrollment e WHERE s.id = e.student.id"
+but not in native sql. This is because in JPQL we refer to the classes and the context, but in native sql we refer to the tables and the DB itself.
+
+* ALWAYS AVOIDING THE native QUERIES.
+
+* Immutability is a best practice. Especially with DTOs because they represent data at a given state. You preferably want to make sure that when creating an instance of a DTO (and this way definition a data state) no one will change it (meaning no other object in the app) until it's used.
 
 
 * Here's how to prevent SQL injection attacks in Java:
