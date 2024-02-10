@@ -11,20 +11,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.TypedQuery;
 
 /**
- * <li><strong>DO NOT FETCH DATA AND THEN FILTER IT, ALWAYS FILTER WHILE
- * FETCHING ITSELF (in the query) </strong>
- * <li>SELECT p FROM Product p ===> JPQL Fetch all the attributes of the Product
- * entity from the current context.
- * <li>SELECT * FROM Product ===> SQL Fetch all columns from the table product.
- * <li>The entity name is case-sensitive
- * <li>Using JPQL we can, UPDATE/DELETE BUT NOT INSERT, for insert operation we
- * should use the persist() from the EntityManager.
- * <li>In JPQL, named queries we can not have the space between the ":" and
- * param_ref_name symbol.
- * <li>{@code em.createQuery("QUERY");} is not generally used because
- * {@code em.createQuery("QUERY", Class.class);} returns
- * {@link jakarta.persistence.TypedQuery} which can be mapped to the object
- */
+*/
 public class Main {
 	public static void main(String[] args) {
 		String name = "pu-name";
@@ -43,37 +30,17 @@ public class Main {
 				EntityManager em = emf.createEntityManager();) {
 
 			em.getTransaction().begin();
-
-			/*
-			 * List<Product> list = new LinkedList<>(); list.add(new Product("Ice cream",
-			 * new BigDecimal("43.3421"))); list.add(new Product("Cake", new
-			 * BigDecimal("33.5421"))); list.add(new Product("Brush", new
-			 * BigDecimal("23.6421"))); list.add(new Product("Coke", new
-			 * BigDecimal("13.7421")));
-			 * 
-			 * for (Product temp : list) { em.persist(temp); }
-			 */
-
-			String jpql = "";
-//			jpql = "SELECT p FROM Product p";
-//			jpql = "SELECT p FROM Product p WHERE p.price > 25"; // where clause remains same
-			/* .getSingleResult() will throw Exception if the value is not found, or if multiple results are found */
-//			jpql = "SELECT AVG(p.price) FROM Product p";
-//			jpql = "SELECT SUM(p.price) FROM Product p";
-//			jpql = "SELECT COUNT(p) FROM Product p";
-//			jpql = "SELECT MIN(p.price) FROM Product p";
-//			jpql = "SELECT MAX(p.price) FROM Product p";
-			/* the below query it is expected to return Strings */
-//			jpql = "SELECT p.name FROM Product p";
-			/*
-			 * but, in the query below the result can not be napped to any Type <class>,
-			 * thus we take it as Object[]
-			 */
-//			jpql = "SELECT p.name, p.price FROM Product p";
-			jpql = "SELECT p.name, AVG(p.price) FROM Product p GROUP BY p.name";
+			
+//			String jpql = "SELECT s, e FROM Student s JOIN s.enrollments e";					//(all the students having enrollments)OR 
+//			String jpql = "SELECT s, e FROM Student s, Enrollment e WHERE s = e.student";		//(all the students having enrollments)OR
+			String jpql = "SELECT s, e FROM Student s, Enrollment e WHERE s.id = e.student.id";	//(all the students having enrollments)OR
+			String jpql1 = "SELECT s, e FROM Student s LEFT JOIN s.enrollments e";				//all students, even the once without enrollments
+			String jpql2 = "SELECT s, e FROM Student s OUTER JOIN s.enrollments e";				//all students, even the once without enrollments
+			String jpql3 = "SELECT s, e FROM Student s RIGHT JOIN s.enrollments e";				//only students with the enrollments
+			
 			TypedQuery<Object[]> q = em.createQuery(jpql, Object[].class);
 			q.getResultStream().forEach(obj -> System.out.println(obj[0]+" "+obj[1]));
-
+			System.out.println(q.getResultList().size());
 			em.getTransaction().commit();
 
 		} catch (Exception ex) {
