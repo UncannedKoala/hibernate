@@ -202,6 +202,27 @@ i.e. "SELECT p FROM Product p WHERE p.name LIKE :pName and p.price >= :price"
 * When getting the "jakarta.persistence.TypedQuery.getResultStream()" function, think if the next java operation can be done in the query itself or not. 
 DO NOT GET THE DATA AND FILTER IT AFTERWARDS IN THE JAVA APPLICATION, IF POSSIBLE, FILTER IT USING THE QUERY ITSELF.
 
+* While Querying SINGLE COLUMN value using JPQL, and that has the value of class <Type> (i.e. String, BigDecimal, Double) then use the below:
+->	TypedQuery<Type> q = em.createQuery(jpql, <Type>.class);	<-
+But, when querying for multiple column values that cannot by typed to any class (i.e. String, BigDecimal, Double), then you must accept them as an Array of Objects as shown below:
+->	TypedQuery<Object[]> q = em.createQuery(jpql, Object[].class);	<-
+Where each Object[] will represent a single row of the result set containing multiple values as the elements of the array.
+
+* For aggregation when there is only one result like for COUNT, then we can use "jakarta.persistence.TypedQuery.getSingleResult()" function to get the result. BUT it throws Exception if no result is found or if multiple results are found instead of one.
+
+* There is a 'N+1' query problem, where 'N' queries are run along with the one you executed. It can be resolved altering the relation ship or using custom query.
+
+* PROJECTION means choosing which columns (or expressions) the query shall return.
+SELECTION means which rows are to be returned.
+if the query is	 --->	select a, b, c from foobar where x=3;
+then "a, b, c" is the projection part, "where x=3" the selection part.
+
+* We can use DTO queries in the JPQL queries -->> "SELECT new hibernateStudy.dto.EnrolledStudentsDTO(s, e) FROM Student s, Enrollment e WHERE s.id = e.student.id"
+but not in native sql. This is because in JPQL we refer to the classes and the context, but in native sql we refer to the tables and the DB itself.
+
+* ALWAYS AVOIDING THE native QUERIES.
+
+* Immutability is a best practice. Especially with DTOs because they represent data at a given state. You preferably want to make sure that when creating an instance of a DTO (and this way definition a data state) no one will change it (meaning no other object in the app) until it's used.
 
 
 * Here's how to prevent SQL injection attacks in Java:

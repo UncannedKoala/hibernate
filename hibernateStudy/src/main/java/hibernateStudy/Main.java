@@ -1,41 +1,25 @@
 package hibernateStudy;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import org.hibernate.jpa.HibernatePersistenceProvider;
 
-import hibernateStudy.entity.Product;
+import hibernateStudy.dto.CountedEnrollmentForStudentDTO;
 import hibernateStudy.persistance.CustomPersistenceUnitInfo;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.TypedQuery;
 
 /**
- * <li><strong>DO NOT FETCH DATA AND THEN FILTER IT, ALWAYS FILTER WHILE
- * FETCHING ITSELF (in the query) </strong>
- * <li>SELECT p FROM Product p ===> JPQL Fetch all the attributes of the Product
- * entity from the current context.
- * <li>SELECT * FROM Product ===> SQL Fetch all columns from the table product.
- * <li>The entity name is case-sensitive
- * <li>Using JPQL we can, UPDATE/DELETE BUT NOT INSERT, for insert operation we
- * should use the persist() from the EntityManager.
- * <li>In JPQL, named queries we can not have the space between the ":" and
- * param_ref_name symbol.
- * <li>{@code em.createQuery("QUERY");} is not generally used because
- * {@code em.createQuery("QUERY", Class.class);} returns
- * {@link jakarta.persistence.TypedQuery} which can be mapped to the object
- */
+*/
 public class Main {
 	public static void main(String[] args) {
 		String name = "pu-name";
 
 		Map<String, String> props = new HashMap<>();
 		props.put("hibernate.show_sql", "true");
-		props.put("hibernate.hbm2ddl.auto", "create"); // create, none, update
+		props.put("hibernate.hbm2ddl.auto", "none"); // create, none, update
 		props.put("hibernate.format_sql", "true");
 //		props.put("hibernate.use_sql_comments", "true");
 //		<property name="hibernate.show_sql" value="true"/>
@@ -47,28 +31,21 @@ public class Main {
 				EntityManager em = emf.createEntityManager();) {
 
 			em.getTransaction().begin();
+//			String jpqlDTO = "SELECT new hibernateStudy.dto.EnrolledStudentsDTO(s, e) FROM Student s, Enrollment e WHERE s.id = e.student.id";
+//			TypedQuery<EnrolledStudentsDTO> q = em.createQuery(jpqlINNER, EnrolledStudentsDTO.class);
 
-			List<Product> list = new LinkedList<>();
-			list.add(new Product("Ice cream", new BigDecimal("43.3421")));
-			list.add(new Product("Cake", new BigDecimal("33.5421")));
-			list.add(new Product("Brush", new BigDecimal("23.6421")));
-			list.add(new Product("Coke", new BigDecimal("13.7421")));
+			//inner query
+//			String jpqlINNER = "SELECT s FROM Student s WHERE (SELECT COUNT(e) FROM Enrollment e WHERE e.student.id = s.id) >= 2";		//selects all the student who have enrolled for more than 1 courses
+//			TypedQuery<Student> q = em.createQuery(jpqlINNER, Student.class);
 
-			for (Product temp : list) {
-				em.persist(temp);
-			}
+			//inner query in the projection
+//			String jpqlINNERprojection = "SELECT (SELECT COUNT(e) FROM Enrollment e WHERE e.student = s) FROM Student s";				//select number of enrollments for each student
+//			TypedQuery<Long> q = em.createQuery(jpqlINNERprojection, Long.class);
 
-			String jpql = "";
-			jpql = "SELECT p FROM Product p";
-			jpql = "SELECT p FROM Product p WHERE p.price > 25"; // where clause remains same
-			jpql = "SELECT p FROM Product p WHERE p.name LIKE :pName and p.price >= :price";
-
-			TypedQuery<Product> q = em.createQuery(jpql, Product.class); //
-			q.setParameter("pName", "%C%"); // containing 'C' case-insensitive
-//			q.setParameter("pName", "C%"); // starting with 'C' case-insensitive
-			q.setParameter("price", 20);
-			q.getResultList().forEach(System.out::println);
-			
+			//inner query in the projection using DTO
+			String jpqlINNERprojection = "SELECT new CountedEnrollmentForStudentDTO(s, (SELECT COUNT(e) FROM Enrollment e WHERE e.student = s)) FROM Student s";				//select number of enrollments for each student
+			TypedQuery<CountedEnrollmentForStudentDTO> q = em.createQuery(jpqlINNERprojection, CountedEnrollmentForStudentDTO.class);
+			q.getResultStream().forEach(obj -> System.out.println(obj));
 			em.getTransaction().commit();
 
 		} catch (Exception ex) {
