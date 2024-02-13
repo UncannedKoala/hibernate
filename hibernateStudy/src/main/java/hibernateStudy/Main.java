@@ -9,7 +9,7 @@ import hibernateStudy.entity.Student;
 import hibernateStudy.persistance.CustomPersistenceUnitInfo;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.TypedQuery;
+import jakarta.persistence.Query;
 
 /**
 */
@@ -32,19 +32,12 @@ public class Main {
 
 			em.getTransaction().begin();
 
-			//group by using DTO
-//			String jpqlINNERprojection = "SELECT new CountedEnrollmentForStudentDTO(s.name, COUNT(s)) "
-//					+ "FROM Student s "
-//					+ "GROUP BY s.name "
-//					+ "HAVING s.name LIKE '%m%'"
-//					+ "ORDER BY s.name DESC"
-//					+ " LIMIT 2";				//select number of enrollments for each student
-//			TypedQuery<CountedEnrollmentForStudentDTO> q = em.createQuery(jpqlINNERprojection, CountedEnrollmentForStudentDTO.class);
-	
-			//named query
-			TypedQuery<Student> q = em.createNamedQuery("findStudentsByName", Student.class);
-			q.setParameter("name", "t");
-			q.getResultStream().forEach(obj -> System.out.println(obj));
+			String nativeQuery = "SELECT * FROM Student";
+			
+			Query qry = em.createNativeQuery(nativeQuery, Student.class);
+			qry.getResultList().forEach(res->System.out.println(res));
+			
+			
 			em.getTransaction().commit();
 
 		} catch (Exception ex) {

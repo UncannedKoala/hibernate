@@ -20,7 +20,7 @@ public class Course {
 	
 	private String title;
 	
-	@OneToMany(mappedBy = "course")
+	@OneToMany(mappedBy = "course")		//mapped by 'x' field of <Enrollment> entity
 	private List<Enrollment> enrollments;
 	
 	public String toString() {

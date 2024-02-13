@@ -60,6 +60,8 @@ i.e. we have <Product> abstract class, <Book> extends Product and <ElectronicDev
 
 * We can have a 'SIMPLE primary key' or the 'COMPOSED primary key'.
 
+* All the primitives/String values are eagerly fetched by default, and can be marked to fetch lazily using @Basic(fetch = FetchType.LAZY) over them.
+
 * For hbm2ddl.auto property the list of possible options is:
 validate: validate that the schema matches, make no changes to the schema of the database, you probably want this for production.
 update: update the schema to reflect the entities being persisted
@@ -236,6 +238,9 @@ and use jakarta.persistence.EntityManager.createNamedQuery(String queryName, Cla
 ->	TypedQuery<Student> q = em.createNamedQuery("getAllStudents", Student.class);
 	q.getResultStream().forEach(obj -> System.out.println(obj));								<-
 
+* Native Query is a query that your native Database will directly understand. It deals with the tables instead of Entities(as done by database). We must avoid native queries as much as possible when using a JPA implementation. Use of native queries also makes the application database dependent.
+
+* To avoid native queries we can create VIEW in the database and use that.
 
 * Here's how to prevent SQL injection attacks in Java:
 

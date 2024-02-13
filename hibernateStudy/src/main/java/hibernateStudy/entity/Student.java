@@ -32,10 +32,12 @@ public class Student {
 
 	private String name;
 
-	@OneToMany(mappedBy = "student")
+	@OneToMany(mappedBy = "student")	//mapped by 'student' field of the <Enrollment> entity
 	private List<Enrollment> enrollments;
 
+	@Override
 	public String toString() {
-		return this.name;
+		return "Student [name=" + name + ", enrollments=" + enrollments + "]";
 	}
+
 }

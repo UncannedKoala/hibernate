@@ -24,4 +24,11 @@ public class Enrollment {
 	
 	@ManyToOne
 	private Course course;
+
+	@Override
+	public String toString() {
+		return "Enrollment [student=" + student.getName() + ", course=" + course + "]";
+	}
+	
+	
 }
