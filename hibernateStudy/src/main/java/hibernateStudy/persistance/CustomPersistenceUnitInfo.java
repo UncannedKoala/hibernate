@@ -56,6 +56,7 @@ public class CustomPersistenceUnitInfo implements PersistenceUnitInfo {
 		managedClasses.add("hibernateStudy.entity.Enrollment");
 		managedClasses.add("hibernateStudy.entity.Student");
 		managedClasses.add("hibernateStudy.entity.Course");
+		managedClasses.add("hibernateStudy.entity.DistinctStudent");
 		return managedClasses;
 	}
 
