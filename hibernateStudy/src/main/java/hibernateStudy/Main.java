@@ -5,11 +5,15 @@ import java.util.Map;
 
 import org.hibernate.jpa.HibernatePersistenceProvider;
 
+import com.mysql.cj.Query;
+
 import hibernateStudy.entity.DistinctStudent;
 import hibernateStudy.persistance.CustomPersistenceUnitInfo;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Query;
+import jakarta.persistence.ParameterMode;
+import jakarta.persistence.StoredProcedureParameter;
+import jakarta.persistence.StoredProcedureQuery;
 
 /**
  * In this approach,
@@ -43,10 +47,21 @@ public class Main {
 //			Query qry = em.createNativeQuery(nativeQuery, Student.class);
 //			qry.getResultList().forEach(res->System.out.println(res));
 
-			String jpqlQuery = "SELECT s FROM DistinctStudent s";
-
-			Query qry = em.createQuery(jpqlQuery, DistinctStudent.class);
-			qry.getResultList().forEach(res -> System.out.println(res));
+//			String jpqlQuery = "SELECT s FROM DistinctStudent s";
+//
+//			Query qry = em.createQuery(jpqlQuery, DistinctStudent.class);
+//			qry.getResultList().forEach(res -> System.out.println(res));
+			
+			/* QUERY TO CREATE STORED PROCEDURE ON D.B.
+			 * Delimiter // CREATE PROCEDURE GetStudents(IN id BIGINT) BEGIN SELECT * FROM
+			 * student s WHERE s.id = id; END// Delimiter ;
+			 */
+//			The ParameterMode support is Database dependent
+			StoredProcedureQuery procedureQuery = em.createStoredProcedureQuery("GetStudents", DistinctStudent.class)
+			.registerStoredProcedureParameter("id", Long.class, ParameterMode.IN)
+			.setParameter("id", 2);
+			
+			procedureQuery.getResultList().stream().forEach(res->System.out.println(res));
 
 			em.getTransaction().commit();
 

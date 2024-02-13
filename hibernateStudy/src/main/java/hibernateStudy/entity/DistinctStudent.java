@@ -7,6 +7,7 @@ import lombok.Data;
 
 /**
  * <li>A DTO representing the response of a VIEW query in the database
+ * <li>Despite being an @Entity, it does not represent the database table. This is because, "Entity is anything that we want to be able to query for"
  */
 @Entity
 @Data
