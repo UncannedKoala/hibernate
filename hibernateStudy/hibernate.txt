@@ -250,7 +250,16 @@ Create a simple JPQL query that select all from the <Entity> @code(SELECT s FROM
 
 * Criteria queries can only be used to fetch data and not to insert, update or delete data.
 
-* Criteria query is used when we do not have no pre-defined filtering criteria. Everything in the Criteria query is created on builder methodology.
+* Criteria query is used when we do not have no pre-defined filtering criteria. Everything in the Criteria query is created on builder methodology. And criteriaQuery is built for the expected response type:
+->	CriteriaBuilder builder = em.getCriteriaBuilder();
+	CriteriaQuery<String> cQuery = builder.createQuery(String.class);	//coz we expect single String value for each <Entity>
+
+	Root<Customer> customerRoot = cQuery.from(Customer.class);		//Represents the <Entity> we are dealing with
+	cQuery.select(customerRoot.get("name"));				//Selecting the attribute of the <Entity>
+	TypedQuery<String> query = em.createQuery(cQuery);			//creating the TypedQuery based on the <CriteriaQuery>
+
+	query.getResultList().stream().forEach(System.out::println);		//getting and using the fetched data
+<-
 
 
 

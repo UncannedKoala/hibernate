@@ -48,15 +48,16 @@ public class Main {
 //			em.getTransaction().commit();
 			
 			CriteriaBuilder builder = em.getCriteriaBuilder();
-			CriteriaQuery<Customer> cQuery = builder.createQuery(Customer.class);
+			CriteriaQuery<String> cQuery = builder.createQuery(String.class);	//typed to the <Type> of the expected response
 
 			/* the following line describe the <Entity> to be dealt with */
 			Root<Customer> customerRoot = cQuery.from(Customer.class);	//represents "FROM Customer c" 	part of the Query "SELECT c FROM Customer c"
 
 			/* following query defines the operation to be performed on the <Entity> */
-			cQuery.select(customerRoot);								//represents "SELECT c FROM Customer c"
+//			cQuery.select(customerRoot);								//represents "SELECT c FROM Customer c"
+			cQuery.select(customerRoot.get("name"));					//we can use the .get() function on rootCriteriaQuery to get specific attributes if the Entity only, i.e. here we Get only 'name' attribute instead of the entire Entity
 
-			TypedQuery<Customer> query = em.createQuery(cQuery);
+			TypedQuery<String> query = em.createQuery(cQuery);
 			
 			query.getResultList().stream().forEach(System.out::println);
 			
