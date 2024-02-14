@@ -5,15 +5,14 @@ import java.util.Map;
 
 import org.hibernate.jpa.HibernatePersistenceProvider;
 
-import com.mysql.cj.Query;
-
-import hibernateStudy.entity.DistinctStudent;
+import hibernateStudy.entity.Customer;
 import hibernateStudy.persistance.CustomPersistenceUnitInfo;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.ParameterMode;
-import jakarta.persistence.StoredProcedureParameter;
-import jakarta.persistence.StoredProcedureQuery;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 
 /**
  * In this approach,
@@ -42,28 +41,25 @@ public class Main {
 				EntityManager em = emf.createEntityManager();) {
 
 			em.getTransaction().begin();
-//			String nativeQuery = "SELECT * FROM Student";
-//			
-//			Query qry = em.createNativeQuery(nativeQuery, Student.class);
-//			qry.getResultList().forEach(res->System.out.println(res));
 
-//			String jpqlQuery = "SELECT s FROM DistinctStudent s";
-//
-//			Query qry = em.createQuery(jpqlQuery, DistinctStudent.class);
-//			qry.getResultList().forEach(res -> System.out.println(res));
+//			Long index = 1l;
+//			while(index++<10)
+//				em.persist(new Customer("John"));
+//			em.getTransaction().commit();
 			
-			/* QUERY TO CREATE STORED PROCEDURE ON D.B.
-			 * Delimiter // CREATE PROCEDURE GetStudents(IN id BIGINT) BEGIN SELECT * FROM
-			 * student s WHERE s.id = id; END// Delimiter ;
-			 */
-//			The ParameterMode support is Database dependent
-			StoredProcedureQuery procedureQuery = em.createStoredProcedureQuery("GetStudents", DistinctStudent.class)
-			.registerStoredProcedureParameter("id", Long.class, ParameterMode.IN)
-			.setParameter("id", 2);
-			
-			procedureQuery.getResultList().stream().forEach(res->System.out.println(res));
+			CriteriaBuilder builder = em.getCriteriaBuilder();
+			CriteriaQuery<Customer> cQuery = builder.createQuery(Customer.class);
 
-			em.getTransaction().commit();
+			/* the following line describe the <Entity> to be dealt with */
+			Root<Customer> customerRoot = cQuery.from(Customer.class);	//represents "FROM Customer c" 	part of the Query "SELECT c FROM Customer c"
+
+			/* following query defines the operation to be performed on the <Entity> */
+			cQuery.select(customerRoot);								//represents "SELECT c FROM Customer c"
+
+			TypedQuery<Customer> query = em.createQuery(cQuery);
+			
+			query.getResultList().stream().forEach(System.out::println);
+			
 
 		} catch (Exception ex) {
 			ex.printStackTrace();

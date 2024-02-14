@@ -240,13 +240,19 @@ and use jakarta.persistence.EntityManager.createNamedQuery(String queryName, Cla
 ->	TypedQuery<Student> q = em.createNamedQuery("getAllStudents", Student.class);
 	q.getResultStream().forEach(obj -> System.out.println(obj));								<-
 
-* Native Query is a query that your native Database will directly understand. It deals with the tables instead of Entities(as done by database). We must avoid native queries as much as possible when using a JPA implementation. Use of native queries also makes the application database dependent.
+* Native Query is a query that your native Database will directly understand. It deals with the tables instead of Entities (as done by database). We must avoid native queries as much as possible when using a JPA implementation. Use of native queries also makes the application database dependent.
 
-* To avoid native queries we can create VIEW in the database and use that usin the follow approach:
+* To avoid native queries, we can create VIEW in the database and use that usin the follow approach:
 In this approach, 
 We put the query in the DataBase as a VIEW and give it a name. 
-We create a DTO(i.e.DistinctStudentDTO) to represent the expected response of a complex query, Mark it as an @Entity and @Table(name = "<view name from database>").
+We create a DTO (i.e.DistinctStudentDTO) to represent the expected response of a complex query, Mark it as an @Entity and @Table(name = "<view name from database>").
 Create a simple JPQL query that select all from the <Entity> @code(SELECT s FROM DistinctStudent s), and execute it.
+
+* Criteria queries can only be used to fetch data and not to insert, update or delete data.
+
+* Criteria query is used when we do not have no pre-defined filtering criteria. Everything in the Criteria query is created on builder methodology.
+
+
 
 * Here's how to prevent SQL injection attacks in Java:
 
