@@ -261,6 +261,8 @@ Create a simple JPQL query that select all from the <Entity> @code(SELECT s FROM
 	query.getResultList().stream().forEach(System.out::println);		//getting and using the fetched data
 <-
 
+* Criteria queries are incredibly powerful and verbose, allowing us to build query based on consitions (i.e. if(condition){add filter}else{add another filer})
+
 * Select multiple <Entity> attributes by using the jakarta.persistence.criteria.CriteriaQuery.multiselect(List<Selection<?>> selectionList) function on the Root<?>
 
 

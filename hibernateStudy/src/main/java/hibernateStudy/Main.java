@@ -50,7 +50,13 @@ public class Main {
 			CriteriaBuilder builder = em.getCriteriaBuilder();
 			CriteriaQuery<Object[]> cQuery = builder.createQuery(Object[].class);	//typed to the <Type> of the expected response
 
-			/* the following line describe the <Entity> to be dealt with */
+			/** 
+			 * the following line describe the <Entity> to be dealt with 
+			 * **NOTE** 
+			 * <li>THE FOLLOWING, CriteriaQuery.from() CREATES A NEW ROOT FOR THE <ENTITY> AND ADDS THE QUERY ROOT CORROSPONDING TO THE GIVEN ENTITY, FORMING A CARTESIAN PRODUCT WITH ANY EXISTING ROOTS.
+			 * THUS, WE MUST ALWAYS ONLY CREATE A SINGLE ROOT PER ENTITY, AND NOT USE "cQuery.from(Customer.class)" MULTIPLE TIMES, RATHER HOLD THE REFERENCE AND USE THE REFERENCE
+			 * <li>Using cQuery.from(Customer.class) multiple times for a same query will create a Cartesian product, which can drastically increase the number of results your query returns and potentially impact performance.
+			 */
 			Root<Customer> customerRoot = cQuery.from(Customer.class);	//represents "FROM Customer c" 	part of the Query "SELECT c FROM Customer c"
 
 			/* following query defines the operation to be performed on the <Entity> */
@@ -60,15 +66,21 @@ public class Main {
 			/* to fetch multiple attributes of the <Entity>, use 
 			 * 		jakarta.persistence.criteria.CriteriaQuery.multiselect(Selection<?>... selections) 
 			 * OR 	jakarta.persistence.criteria.CriteriaQuery.multiselect(List<Selection<?>> selectionList) */
-			cQuery.multiselect(
-					customerRoot.get("id"),
-					customerRoot.get("name"));
+			
+//			cQuery.multiselect(customerRoot.get("id"),customerRoot.get("name"))		//SELECT c.id, c.name FROM customer						
+//			.where(builder.ge(customerRoot.get("id"), 15))							//WHERE c.id >= 15
+//			.orderBy(builder.asc(customerRoot.get("name")));						//ORDER BY c.name ASC
+
+			cQuery.multiselect(builder.count(customerRoot.get("id")),customerRoot.get("name"))		//SELECT COUNT(c.id), c.name FROM customer						
+//			.where(builder.ge(customerRoot.get("id"), 15))											//WHERE c.id >= 15
+			.groupBy(customerRoot.get("name"))														//GROUP BY c.name
+			.orderBy(builder.asc(customerRoot.get("name")));										//ORDER BY c.name ASC
 			
 
 			TypedQuery<Object[]> query = em.createQuery(cQuery);
 			
 			query.getResultList()
-				.forEach(res -> System.out.println("Attribute1: " + res[0] + ", attribute2: " + res[1]));
+				.forEach(res -> System.out.println("There are " + res[0] + " entries for " + res[1]));
 			
 
 		} catch (Exception ex) {
