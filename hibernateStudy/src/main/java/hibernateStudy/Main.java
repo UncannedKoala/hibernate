@@ -48,18 +48,27 @@ public class Main {
 //			em.getTransaction().commit();
 			
 			CriteriaBuilder builder = em.getCriteriaBuilder();
-			CriteriaQuery<String> cQuery = builder.createQuery(String.class);	//typed to the <Type> of the expected response
+			CriteriaQuery<Object[]> cQuery = builder.createQuery(Object[].class);	//typed to the <Type> of the expected response
 
 			/* the following line describe the <Entity> to be dealt with */
 			Root<Customer> customerRoot = cQuery.from(Customer.class);	//represents "FROM Customer c" 	part of the Query "SELECT c FROM Customer c"
 
 			/* following query defines the operation to be performed on the <Entity> */
 //			cQuery.select(customerRoot);								//represents "SELECT c FROM Customer c"
-			cQuery.select(customerRoot.get("name"));					//we can use the .get() function on rootCriteriaQuery to get specific attributes if the Entity only, i.e. here we Get only 'name' attribute instead of the entire Entity
-
-			TypedQuery<String> query = em.createQuery(cQuery);
+//			cQuery.select(customerRoot.get("name"));					//we can use the .get() function on rootCriteriaQuery to get specific attributes if the Entity only, i.e. here we Get only 'name' attribute instead of the entire Entity
 			
-			query.getResultList().stream().forEach(System.out::println);
+			/* to fetch multiple attributes of the <Entity>, use 
+			 * 		jakarta.persistence.criteria.CriteriaQuery.multiselect(Selection<?>... selections) 
+			 * OR 	jakarta.persistence.criteria.CriteriaQuery.multiselect(List<Selection<?>> selectionList) */
+			cQuery.multiselect(
+					customerRoot.get("id"),
+					customerRoot.get("name"));
+			
+
+			TypedQuery<Object[]> query = em.createQuery(cQuery);
+			
+			query.getResultList()
+				.forEach(res -> System.out.println("Attribute1: " + res[0] + ", attribute2: " + res[1]));
 			
 
 		} catch (Exception ex) {
