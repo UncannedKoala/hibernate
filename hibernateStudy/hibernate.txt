@@ -3,7 +3,9 @@ Altough we can use the Spring Data JPA to use JPQL as Spring Data Jpa is a JPA i
 
 * When using the Hibernate Entity manager approach, you can either use the xml (persistance.xml file) to configure the hibernate in your maven application, or use the PersistanceUnitInfo interface (CustomPersistanceUnitInfo.java implements PersistanceUnitInfo).
 
-* @Entity can be used on anything (Concrete class or an abstract Class) that we would use as a reference to a <Entity>. 
+* @Entity can be used on anything (Concrete class or an abstract Class) that we would use as a reference to a <Entity> OR 
+ANYTHING THAT WE EXPECT AS A RESPONSE "representing the response from a query". OR
+"Entity is anything that we want to be able to query for"
 i.e. we have <Product> abstract class, <Book> extends Product and <ElectronicDevice> extends Product. Now, we can mark the <Product> abstract class as @Entity and it will allow us the write polymorphic queries refering to the root/parent class.
 
 *PERSISTANCE.XML route
@@ -59,6 +61,8 @@ i.e. we have <Product> abstract class, <Book> extends Product and <ElectronicDev
 * We can have 2 ids, 1 UUID to communicate with the frontend(external id) and another to use in app(internal id)
 
 * We can have a 'SIMPLE primary key' or the 'COMPOSED primary key'.
+
+* All the primitives/String values are eagerly fetched by default, and can be marked to fetch lazily using @Basic(fetch = FetchType.LAZY) over them.
 
 * For hbm2ddl.auto property the list of possible options is:
 validate: validate that the schema matches, make no changes to the schema of the database, you probably want this for production.
@@ -235,6 +239,32 @@ but not in native sql. This is because in JPQL we refer to the classes and the c
 and use jakarta.persistence.EntityManager.createNamedQuery(String queryName, Class<?> resultClass) method to query as shown below:
 ->	TypedQuery<Student> q = em.createNamedQuery("getAllStudents", Student.class);
 	q.getResultStream().forEach(obj -> System.out.println(obj));								<-
+
+* Native Query is a query that your native Database will directly understand. It deals with the tables instead of Entities (as done by database). We must avoid native queries as much as possible when using a JPA implementation. Use of native queries also makes the application database dependent.
+
+* To avoid native queries, we can create VIEW in the database and use that usin the follow approach:
+In this approach, 
+We put the query in the DataBase as a VIEW and give it a name. 
+We create a DTO (i.e.DistinctStudentDTO) to represent the expected response of a complex query, Mark it as an @Entity and @Table(name = "<view name from database>").
+Create a simple JPQL query that select all from the <Entity> @code(SELECT s FROM DistinctStudent s), and execute it.
+
+* Criteria queries can only be used to fetch data and not to insert, update or delete data.
+
+* Criteria query is used when we do not have no pre-defined filtering criteria. Everything in the Criteria query is created on builder methodology. And criteriaQuery is built for the expected response type:
+->	CriteriaBuilder builder = em.getCriteriaBuilder();
+	CriteriaQuery<String> cQuery = builder.createQuery(String.class);	//coz we expect single String value for each <Entity>
+
+	Root<Customer> customerRoot = cQuery.from(Customer.class);		//Represents the <Entity> we are dealing with
+	cQuery.select(customerRoot.get("name"));				//Selecting the attribute of the <Entity>
+	TypedQuery<String> query = em.createQuery(cQuery);			//creating the TypedQuery based on the <CriteriaQuery>
+
+	query.getResultList().stream().forEach(System.out::println);		//getting and using the fetched data
+<-
+
+* Criteria queries are incredibly powerful and verbose, allowing us to build query based on consitions (i.e. if(condition){add filter}else{add another filer})
+
+* Select multiple <Entity> attributes by using the jakarta.persistence.criteria.CriteriaQuery.multiselect(List<Selection<?>> selectionList) function on the Root<?>
+
 
 
 * Here's how to prevent SQL injection attacks in Java:
